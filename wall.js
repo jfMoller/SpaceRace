@@ -1,5 +1,4 @@
 import { Entity } from "./entity.js";
-import { ctx } from "./game.js";
 
 export class Wall extends Entity {
     constructor(position) {
@@ -10,7 +9,7 @@ export class Wall extends Entity {
 
     }
 
-    draw(game) {
+    draw(game, ctx) {
     ctx.beginPath();
     ctx.rect(this.position.x / 2, this.position.y / 2, this.width, this.height);
     ctx.fillStyle = this.color;

@@ -8,7 +8,7 @@ export function handleKeyDown(event) {
   } else if (event.key === "s" || event.key === "S") {
     game.player1.keys.down = true;
   } else if (event.key === "q" || event.key === "Q") {
-    game.player1.keys.shoot = true;
+    game.player1.keys.shoot1 = true;
   }
 
   if (event.key === "o" || event.key === "O") {
@@ -16,7 +16,7 @@ export function handleKeyDown(event) {
   } else if (event.key === "l" || event.key === "L") {
     game.player2.keys.down = true;
   } else if (event.key === "p" || event.key === "P") {
-    game.player2.keys.shoot = true;
+    game.player2.keys.shoot2 = true;
     
   }
 }
@@ -28,7 +28,7 @@ export function handleKeyUp(event) {
   } else if (event.key === "s" || event.key === "S") {
     game.player1.keys.down = false;
   } else if (event.key === "q" || event.key === "Q") {
-    game.player1.keys.down = false;
+    game.player1.keys.shoot1 = false;
   }
 
   if (event.key === "o" || event.key === "O") {
@@ -36,6 +36,6 @@ export function handleKeyUp(event) {
   } else if (event.key === "l" || event.key === "L") {
     game.player2.keys.down = false;
   } else if (event.key === "p" || event.key === "P") {
-    game.player2.keys.shoot = false;
+    game.player2.keys.shoot2 = false;
   }
 }

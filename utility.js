@@ -35,17 +35,3 @@ else if (circle.position.x > width + circle.radius) {
     }
 else { return false;}
 }
-
-export function showsScore(player, ctx) {
-    ctx.font = "90px serif";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    if (player.position.x < width / 2) {
-    ctx.fillText(player.score , player.position.x - player.width, height * 0.90);
-  }
-    else {
-      ctx.fillText(player.score , player.position.x + player.width * 2, height * 0.90);
-    }
-}
- 

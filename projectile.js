@@ -6,7 +6,6 @@ export class Projectile extends Entity {
         this.radius = 10;
         this.color = "yellow";
         this.velocity = velocity;
-        this.type = "cannonball"
     }
     draw(game, ctx){
         ctx.beginPath();
@@ -15,7 +14,7 @@ export class Projectile extends Entity {
         ctx.fill();
     }
     tick(game) {
-     this.position.x += this.velocity.dx;   
-     this.position.y += this.velocity.dy;   
+     this.position.x += this.velocity.dx * game.deltaTime;;   
+     this.position.y += this.velocity.dy * game.deltaTime;;   
     }
 }
