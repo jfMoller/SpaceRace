@@ -1,5 +1,6 @@
 import { ctx, canvas, height, width } from "./game.js";
 import { Entity, Velocity, Position } from "./entity.js";
+import { Projectile } from "./projectile.js";
 
 class Keys {
   constructor() {
@@ -17,7 +18,7 @@ export class Player extends Entity {
     this.keys = new Keys();
     this.velocity = new Velocity(5, 5);
     this.score = 0;
-    this.startposition = null;
+    this.shoot = false;
   }
 
   draw() {
@@ -26,9 +27,7 @@ export class Player extends Entity {
     //ctx.rect(100, 100, 40, 40);
     ctx.fillStyle = this.color;
     ctx.fill();
-//
-
-
+    //
   }
   tick(game) {
     if (this.keys.up && this.position.y > 0) {
@@ -51,7 +50,31 @@ export class Player extends Entity {
       game.player2.position.x = width * 0.75 - 130;
       game.player2.position.y = height - 100;
     }
-   
-    //console.log(this.score)
+    //SHOOTING PLAYER1
+    if (game.player1.keys.shoot) {
+      game.entities.push(
+        new Projectile(
+          new Position(
+            game.player1.position.x + this.width,
+            game.player1.position.y + this.height / 2
+          ),
+          new Velocity(5, 0)
+        )
+      );
+      game.player1.keys.shoot = false;
+    }
+    //SHOOTING PLAYER2
+    if (game.player2.keys.shoot) {
+      game.entities.push(
+        new Projectile(
+          new Position(
+            game.player2.position.x,
+            game.player2.position.y + this.height / 2
+          ),
+          new Velocity(-5, 0)
+        )
+      );
+      game.player2.keys.shoot = false;
+    }
   }
 }
