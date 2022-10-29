@@ -1,14 +1,14 @@
-export const canvas = document.getElementById("canvas");
-export const ctx = canvas.getContext("2d");
-export const width = canvas.width;
-export const height = canvas.height;
-
 import { Position, Velocity } from "./entity.js";
 import { Player } from "./player.js";
 import { Wall } from "./wall.js";
 import { Enemy } from "./Enemy.js";
 import { isColliding, isOutsideCanvas } from "./utility.js";
 import { Projectile } from "./projectile.js";
+
+export const canvas = document.getElementById("canvas");
+export const ctx = canvas.getContext("2d");
+export const width = canvas.width;
+export const height = canvas.height;
 
 export class Game {
   constructor(canvas, ctx) {
@@ -29,6 +29,7 @@ export class Game {
     this.deltaTime = 0;
     this.tickTime = 0;
   }
+
   start() {
     tick();
     if (this.enemiesOn) {
@@ -37,6 +38,7 @@ export class Game {
       }, this.enemiesSpawnRate);
     }
   }
+
   spawnEnemies() {
     let randomDirection = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
 
@@ -69,7 +71,7 @@ let currentTick = Date.now();
 
 game.deltaTime = (currentTick - lastTick) / 1000;
 lastTick = currentTick;
-game.tickTime += game.deltaTime;
+game.tickTime += game.deltaTime; //game.totalTimePassed
 
   ctx.clearRect(0, 0, width, height);
 

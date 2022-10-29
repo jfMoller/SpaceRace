@@ -1,4 +1,3 @@
-
 import { height, width } from "./game.js";
 import { Entity, Velocity, Position } from "./entity.js";
 import { Projectile } from "./projectile.js";
@@ -7,8 +6,7 @@ class Keys {
   constructor() {
     this.up = false;
     this.down = false;
-    this.shoot1 = false;
-    this.shoot2 = false;
+    this.shoot = false;
   }
 }
 export class Player extends Entity {
@@ -20,13 +18,9 @@ export class Player extends Entity {
     this.keys = new Keys();
     this.velocity = new Velocity(700, 700);
     this.score = 0;
-    this.shoot = false;
 
-    this.player1TickTime = 0;
-    this.Player2TickTime = 0;
-
-    this.player1ShotReady = true;
-    this.player2ShotReady = true;
+    this.timeOfShotFired = 0;
+    this.shotReady = true;
   }
 
   draw(game, ctx) {
@@ -52,14 +46,10 @@ export class Player extends Entity {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     if (this.position.x < width / 2) {
-      ctx.fillText(
-        this.player1ShotReady,
-        this.position.x - this.width,
-        height * 0.83
-      );
+      ctx.fillText(this.shotReady, this.position.x - this.width, height * 0.83);
     } else {
       ctx.fillText(
-        this.player2ShotReady,
+        this.shotReady,
         this.position.x + this.width * 2,
         height * 0.83
       );
@@ -68,72 +58,70 @@ export class Player extends Entity {
   tick(game) {
     if (this.keys.up && this.position.y > 0) {
       this.position.y -= this.velocity.dy * game.deltaTime;
-    } // < 800 -100 = 700
+    }
     if (this.keys.down && this.position.y < height - this.height) {
       this.position.y += this.velocity.dy * game.deltaTime;
     }
-    //om spelaren kommer hela vägen upp på canvas, score++
 
+    //om spelaren kommer hela vägen upp på canvas, score++
     if (game.player1.position.y <= 0) {
       game.player1.score++;
-      //game.player1.position = new Position(width / 4, height - 100);
       game.player1.position = new Position(width / 2 - 50 * 2, height - 100);
     }
 
     if (game.player2.position.y <= 0) {
       game.player2.score++;
-      //game.player2.position = new Position((width * 3) / 4, height - 100)
       game.player2.position = new Position(width / 2 + 70, height - 100);
     }
-    //SHOOTING AND RELOADING PLAYER1
 
-    if (this.keys.shoot1 && this.player1ShotReady === false) {
+    //SHOOTING AND RELOADING FOR PLAYERS
+
+    //if a player tries to shoot, but the shot is not ready
+    if (this.keys.shoot && this.shotReady === false) {
       console.log("Can't shoot yet; reloading");
-      this.keys.shoot1 = false;
     }
-
-    if (this.keys.shoot1 && this.player1ShotReady) {
-      this.player1TickTime = game.tickTime;
-      game.entities.push(
-        new Projectile(
-          new Position(
-            game.player1.position.x + this.width + 8,
-            game.player1.position.y + this.height / 2
-          ),
-          new Velocity(300, 0)
-        )
-      );
-      this.keys.shoot1 = false;
-      this.player1ShotReady = false;
-      console.log(this.player1TickTime);
+    //if player shoots, and shot is ready
+    if (this.keys.shoot && this.shotReady) {
+      //creates a time value of WHEN the player shoots
+      this.timeOfShotFired = game.tickTime;
+      //PLAYER1; if the player is on the left side of the screen, the projectile will travel to the right
+      if (this.position.x < width / 2) {
+        game.entities.push(
+          new Projectile(
+            new Position(
+              this.position.x + this.width + 8,
+              this.position.y + this.height / 2
+            ),
+            new Velocity(300, 0)
+          )
+        );
+      }
+      //PLAYER2; if the player is on the right side of the screen, the projectile will travel left
+      else {
+        game.entities.push(
+          new Projectile(
+            new Position(
+              this.position.x - 8,
+              this.position.y + this.height / 2
+            ),
+            new Velocity(-300, 0)
+          )
+        );
+      }
+      //when the projectile has been shot, the shot is not ready anymore
+      this.shotReady = false;
+      console.log(this.timeOfShotFired);
     }
-    if (game.tickTime - this.player1TickTime >= 3) {
-      this.player1ShotReady = true;
-    }
-
-    //SHOOTING AND RELOADING PLAYER2
-    if (this.keys.shoot2 && this.player2ShotReady === false) {
-      console.log("Can't shoot yet; reloading");
-      this.keys.shoot2 = false;
-    }
-
-    if (this.keys.shoot2 && this.player2ShotReady) {
-      this.player2TickTime = game.tickTime;
-      game.entities.push(
-        new Projectile(
-          new Position(
-            game.player2.position.x - 8,
-            game.player2.position.y + this.height / 2
-          ),
-          new Velocity(-300, 0)
-        )
-      );
-      this.keys.shoot2 = false;
-      this.player2ShotReady = false;
-      console.log(this.player2TickTime);
-    }
-    if (game.tickTime - this.player2TickTime >= 3) {
-      this.player2ShotReady = true;
+    /* in words: if the (total amount of time that HAS elapsed in the game 
+        - the time that HAD elapsed in the game when the player shot) is more than 3 seconds,
+        THEN the shot will be ready again.
+        practial example: total amount of time elapsed in the game = 10 sec, time when the player shot = 10 sec
+        10 sec - 10 sec = 0, -> NOT READY to shoot again
+        11 sec - 10 sec = 1 -> NOT READY to shoot again
+        12 sec - 10 sec = 2 -> NOT READY to shoot again
+        13 sec - 10 sec = 3 -> READY to shoot again */
+    if (game.tickTime - this.timeOfShotFired >= 3) {
+      this.shotReady = true;
     }
   }
 }
