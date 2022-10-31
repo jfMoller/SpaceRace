@@ -2,8 +2,8 @@ import { Position, Velocity } from "./entity.js";
 import { Player } from "./player.js";
 import { Wall } from "./wall.js";
 import { Enemy } from "./Enemy.js";
-import { isCircleAndCircleColliding, isCircleAndRectColliding, isOutsideCanvas } from "./utility.js";
-import { Projectile } from "./projectile.js";
+import { Menu } from "./menu.js";
+import { startMenu } from "./main.js";
 
 export const canvas = document.getElementById("canvas");
 export const ctx = canvas.getContext("2d");
@@ -22,14 +22,18 @@ export class Game {
     this.wall = this.entities[0];
     this.player1 = this.entities[1];
     this.player2 = this.entities[2];
+
     //ENEMY SETTINGS
     this.enemiesOn = true;
     this.enemiesSpawnRate = 800; //ms
     //TIME
     this.deltaTime = 0;
     this.tickTime = 0;
-    //for handling index accross classes
+    //for handling index values when splicing in tick method of different classes
     this.index = 0;
+    //GAME STATES FOR HANDLING MENU
+    this.running = false;
+    this.over = false;
   }
 
   start() {
@@ -83,16 +87,21 @@ function tick() {
     let entity = game.entities[game.index];
     entity.draw(game, ctx);
     entity.tick(game);
-
-    //GAME OVER PROTOTYPE
-    if (game.player1.score >= 10) {
-      alert("Player 1 wins!");
-      return;
-    } else if (game.player2.score >= 10) {
-      alert("Player 2 wins!");
-      return;
-    }
   }
+  //GAME OVER PROTOTYPE
+  if (game.player1.score >= 1 && game.running) {
+    game.entities.push(new Menu(new Position(0,0), "Player 1 won!", "Restart Game"))
+    game.running = false;
+    game.over = true;    
+    }
+    if (game.player2.score >= 1 && game.running) {
+    game.entities.push(new Menu(new Position(0,0), "Player 2 won!", "Restart Game"))
+    game.running = false;
+    game.over = true;     
+    }
+
+
+
 
   requestAnimationFrame(tick);
 }
