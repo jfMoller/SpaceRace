@@ -3,12 +3,11 @@ import { isCircleAndRectColliding, isOutsideCanvas } from "./utility.js";
 import { width, height } from "./game.js";
 
 export class Projectile extends Entity {
-  constructor(position, velocity, owner) {
+  constructor(position, velocity) {
     super(position);
     this.radius = 10;
     this.color = "yellow";
     this.velocity = velocity;
-    this.owner = owner;
   }
   draw(game, ctx) {
     ctx.beginPath();

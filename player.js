@@ -58,11 +58,7 @@ export class Player extends Entity {
   tick(game) {
     this.movesDown(game);
     this.movesUp(game);
-
-    //om spelaren kommer hela vägen upp på canvas, score++
-    this.player1ScoresAndResetsPosition(game);
-    this.player2ScoresAndResetsPosition(game);
-
+    this.playerScoresAndResetsPosition(game);
     this.shootsAndReloads(game);
   }
 
@@ -78,19 +74,16 @@ export class Player extends Entity {
     }
   }
 
-  player1ScoresAndResetsPosition(game) {
+  playerScoresAndResetsPosition(game) {
     if (game.player1.position.y <= 0) {
-      game.player1.score++;
-      game.player1.position = new Position(width / 2 - 50 * 2, height - 100);
+      this.score++;
+      this.position = new Position(width / 2 - 50 * 2, height - 100);
+    } else if (game.player2.position.y <= 0) {
+      this.score++;
+      this.position = new Position(width / 2 + 70, height - 100);
     }
   }
 
-  player2ScoresAndResetsPosition(game) {
-    if (game.player2.position.y <= 0) {
-      game.player2.score++;
-      game.player2.position = new Position(width / 2 + 70, height - 100);
-    }
-  }
   shootsAndReloads(game) {
     //SHOOTING AND RELOADING FOR PLAYERS
 
@@ -104,30 +97,11 @@ export class Player extends Entity {
       this.timeOfShotFired = game.tickTime;
       //PLAYER1; if the player is on the left side of the screen, the projectile will travel to the right
       if (this.position.x < width / 2) {
-        // game.player1.position
-        game.entities.push(
-          new Projectile(
-            new Position(
-              this.position.x + this.width + 8,
-              this.position.y + this.height / 2
-            ),
-            new Velocity(300, 0),
-            game.player1
-          )
-        );
+        this.projectileTravelsRight(game);
       }
       //PLAYER2; if the player is on the right side of the screen, the projectile will travel left
       else {
-        game.entities.push(
-          new Projectile(
-            new Position(
-              this.position.x - 8,
-              this.position.y + this.height / 2
-            ),
-            new Velocity(-300, 0),
-            game.player2
-          )
-        );
+        this.projectileTravelsLeft(game);
       }
       //when the projectile has been shot, the shot is not ready anymore
       this.shotReady = false;
@@ -143,5 +117,24 @@ export class Player extends Entity {
     if (game.tickTime - this.timeOfShotFired >= 3) {
       this.shotReady = true;
     }
+  }
+  projectileTravelsRight(game) {
+    game.entities.push(
+      new Projectile(
+        new Position(
+          this.position.x + this.width + 8,
+          this.position.y + this.height / 2
+        ),
+        new Velocity(300, 0)
+      )
+    );
+  }
+  projectileTravelsLeft(game) {
+    game.entities.push(
+      new Projectile(
+        new Position(this.position.x - 8, this.position.y + this.height / 2),
+        new Velocity(-300, 0)
+      )
+    );
   }
 }

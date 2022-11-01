@@ -1,9 +1,7 @@
 import { Position, Velocity } from "./entity.js";
 import { Player } from "./player.js";
 import { Wall } from "./wall.js";
-import { Enemy } from "./Enemy.js";
-import { Menu } from "./menu.js";
-import { startMenu } from "./main.js";
+import { Enemy } from "./enemy.js";
 
 export const canvas = document.getElementById("canvas");
 export const ctx = canvas.getContext("2d");
@@ -15,7 +13,7 @@ export class Game {
     this.canvas = canvas;
     this.ctx = ctx;
     this.entities = [
-      new Wall(new Position(width / 2, 600)),
+      new Wall(new Position(width / 2, height - 200)),
       new Player(new Position(width / 2 - 50 * 2, height - 100)),
       new Player(new Position(width / 2 + 70, height - 100)),
     ];
@@ -25,15 +23,14 @@ export class Game {
 
     //ENEMY SETTINGS
     this.enemiesOn = true;
-    this.enemiesSpawnRate = 800; //ms
+    this.enemiesSpawnRate = 200; //ms
     //TIME
     this.deltaTime = 0;
     this.tickTime = 0;
     //for handling index values when splicing in tick method of different classes
     this.index = 0;
     //GAME STATES FOR HANDLING MENU
-    this.running = false;
-    this.over = false;
+    this.running = true;
   }
 
   start() {
@@ -52,16 +49,16 @@ export class Game {
       // from the left side
       this.entities.push(
         new Enemy(
-          new Position(0, Math.random() * 500),
-          new Velocity(Math.random() * 400, 0)
+          new Position(0, Math.random() * height - 200),
+          new Velocity(400, 0)
         )
       );
     } else if (randomDirection === 1) {
       // from the right side
       this.entities.push(
         new Enemy(
-          new Position(800, Math.random() * 500),
-          new Velocity(Math.random() * -400, 0)
+          new Position(800, Math.random() * height - 200),
+          new Velocity(-400, 0)
         )
       );
     }
@@ -88,21 +85,21 @@ function tick() {
     entity.draw(game, ctx);
     entity.tick(game);
   }
-  //GAME OVER PROTOTYPE
-  if (game.player1.score >= 1 && game.running) {
-    game.entities.push(new Menu(new Position(0,0), "Player 1 won!", "Restart Game"))
-    game.running = false;
-    game.over = true;    
-    }
-    if (game.player2.score >= 1 && game.running) {
-    game.entities.push(new Menu(new Position(0,0), "Player 2 won!", "Restart Game"))
-    game.running = false;
-    game.over = true;     
-    }
 
+//END SCREEN PROTOTYPE - move into player when done
+if (game.player1.score >= 10 && game.running) {
+  alert("Player 1 has won!")
+  game.running = false;
+  location.reload();
+  return;
+}
 
-
-
+if (game.player2.score >= 10 && game.running) {
+  alert("Player 2 has won!")
+  game.running = false;
+  location.reload();
+  return;
+}
   requestAnimationFrame(tick);
 }
 
