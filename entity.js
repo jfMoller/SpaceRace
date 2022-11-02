@@ -17,5 +17,6 @@ export class Entity {
     this.position = position;
   }
   draw() {}
+
   tick() {}
 }

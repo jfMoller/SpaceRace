@@ -18,29 +18,39 @@ export class Player extends Entity {
     this.keys = new Keys();
     this.velocity = new Velocity(700, 700);
     this.score = 0;
-
+    //for keeping track of reload time
     this.timeOfShotFired = 0;
     this.shotReady = true;
   }
 
   draw(game, ctx) {
+    this.appearance(ctx);
+
+    this.scores(ctx);
+
+    this.reloadStatus(ctx);
+  }
+  appearance(ctx) {
     ctx.beginPath();
     ctx.rect(this.position.x, this.position.y, this.width, this.height);
     ctx.fillStyle = this.color;
     ctx.fill();
+  }
 
-    //PLAYER SCORE PROTOTYPE
+  scores(ctx) {
     ctx.font = "90px serif";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+
     if (this.position.x < width / 2) {
       ctx.fillText(this.score, this.position.x - this.width, height * 0.9);
     } else {
       ctx.fillText(this.score, this.position.x + this.width * 2, height * 0.9);
     }
+  }
 
-    //PLAYER RELOAD STATUS PROTOTYPE
+  reloadStatus(ctx) {
     ctx.font = "40px serif";
     ctx.fillStyle = "yellow";
     ctx.textAlign = "center";
@@ -55,10 +65,14 @@ export class Player extends Entity {
       );
     }
   }
+
   tick(game) {
-    this.movesDown(game);
     this.movesUp(game);
-    this.playerScoresAndResetsPosition(game);
+
+    this.movesDown(game);
+
+    this.scoresAndResetsPosition(game);
+
     this.shootsAndReloads(game);
   }
 
@@ -74,7 +88,7 @@ export class Player extends Entity {
     }
   }
 
-  playerScoresAndResetsPosition(game) {
+  scoresAndResetsPosition(game) {
     if (game.player1.position.y <= 0) {
       this.score++;
       this.position = new Position(width / 2 - 50 * 2, height - 100);
@@ -85,8 +99,6 @@ export class Player extends Entity {
   }
 
   shootsAndReloads(game) {
-    //SHOOTING AND RELOADING FOR PLAYERS
-
     //if a player tries to shoot, but the shot is not ready
     if (this.keys.shoot && this.shotReady === false) {
       this.keys.shoot = false;
@@ -106,14 +118,10 @@ export class Player extends Entity {
       //when the projectile has been shot, the shot is not ready anymore
       this.shotReady = false;
     }
-    /* in words: if the (total amount of time that HAS elapsed in the game 
+    /*  in words: if the (total amount of time that HAS elapsed in the game 
           - the time that HAD elapsed in the game when the player shot) is more than 3 seconds,
-          THEN the shot will be ready again.
-          practial example: total amount of time elapsed in the game = 10 sec, time when the player shot = 10 sec
-          10 sec - 10 sec = 0, -> NOT READY to shoot again
-          11 sec - 10 sec = 1 -> NOT READY to shoot again
-          12 sec - 10 sec = 2 -> NOT READY to shoot again
-          13 sec - 10 sec = 3 -> READY to shoot again */
+          THEN the shot will be ready again. */
+
     if (game.tickTime - this.timeOfShotFired >= 3) {
       this.shotReady = true;
     }
@@ -123,9 +131,8 @@ export class Player extends Entity {
       new Projectile(
         new Position(
           this.position.x + this.width + 8,
-          this.position.y + this.height / 2
-        ),
-        new Velocity(300, 0)
+          this.position.y + this.height / 2),
+        new Velocity(600, 0)
       )
     );
   }
@@ -133,7 +140,7 @@ export class Player extends Entity {
     game.entities.push(
       new Projectile(
         new Position(this.position.x - 8, this.position.y + this.height / 2),
-        new Velocity(-300, 0)
+        new Velocity(-600, 0)
       )
     );
   }

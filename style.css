@@ -1,21 +1,11 @@
 body {
-background-image: radial-gradient(circle, #2d3236, #262a2d, #1f2224, #181b1c, #111314);
-margin: 0;
-padding: 0;
-}
+  background-image: radial-gradient(circle, #2d3236, #262a2d, #1f2224, #181b1c, #111314);
+  margin: 0;
+  padding: 0;
+  }
 
   canvas{
     background-color: black;
   }
-  #container {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  #gameScreen {
-    background-color: red;
-    width: 500px;
-    height: 500px;
-  }
+
+  

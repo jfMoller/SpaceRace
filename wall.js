@@ -9,6 +9,9 @@ export class Wall extends Entity {
   }
 
   draw(game, ctx) {
+    this.appearance(ctx);
+  }
+  appearance(ctx) {
     ctx.beginPath();
     ctx.rect(this.position.x, this.position.y, this.width, this.height);
     ctx.fillStyle = this.color;

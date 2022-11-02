@@ -10,11 +10,16 @@ export class Projectile extends Entity {
     this.velocity = velocity;
   }
   draw(game, ctx) {
+    this.appearance(ctx);
+  }
+
+  appearance(ctx) {
     ctx.beginPath();
     ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
     ctx.fillStyle = this.color;
     ctx.fill();
   }
+
   tick(game) {
     this.moves(game);
     if (isOutsideCanvas(this)) {
@@ -33,7 +38,6 @@ export class Projectile extends Entity {
 
     if (isCircleAndRectColliding(this, game.wall)) {
       this.isDeleted(game);
-
     }
   }
 
