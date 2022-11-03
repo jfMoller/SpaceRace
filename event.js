@@ -2,7 +2,6 @@ import { game } from "./game.js";
 import { startMenu } from "./main.js";
 
 export function handleKeyDown(event) {
-
   if (game.running) {
     if (event.repeat) return;
 
@@ -29,7 +28,6 @@ export function handleKeyDown(event) {
 }
 
 export function handleKeyUp(event) {
-  
   if (game.running) {
     if (event.key === "w" || event.key === "W") {
       game.player1.keys.up = false;

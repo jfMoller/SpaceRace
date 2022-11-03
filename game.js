@@ -14,7 +14,7 @@ export class Game {
     this.canvas = canvas;
     this.ctx = ctx;
     this.entities = [
-      new Wall(new Position(width / 2, height - 200)),
+      new Wall(new Position(width / 2, height - 181)),
       new Player(new Position(width / 2 - 50 * 2, height - 100)),
       new Player(new Position(width / 2 + 70, height - 100)),
     ];
@@ -24,7 +24,7 @@ export class Game {
 
     //ENEMY SETTINGS
     this.enemiesOn = true;
-    this.enemiesSpawnRate = 200; //ms
+    this.enemiesSpawnRate = 500; //ms
 
     //TIME MEASUREMENT (used to equalize game experience for users with different FPS)
     this.deltaTime = 0;
@@ -54,7 +54,7 @@ export class Game {
       this.entities.push(
         new Enemy(
           new Position(0, Math.random() * height - 200),
-          new Velocity(400, 0)
+          new Velocity(100, 0)
         )
       );
     } else if (randomDirection === 1) {
@@ -62,7 +62,7 @@ export class Game {
       this.entities.push(
         new Enemy(
           new Position(width, Math.random() * height - 200),
-          new Velocity(-400, 0)
+          new Velocity(-100, 0)
         )
       );
     }

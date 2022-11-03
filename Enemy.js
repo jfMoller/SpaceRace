@@ -1,6 +1,7 @@
 import { isOutsideCanvas, isCircleAndRectColliding } from "./utility.js";
-import { Entity, Position } from "./entity.js";
+import { Entity, Position, Velocity } from "./entity.js";
 import { width, height } from "./game.js";
+import { addsImageToCanvas } from "./utility.js";
 
 export class Enemy extends Entity {
   constructor(position, velocity) {
@@ -8,9 +9,16 @@ export class Enemy extends Entity {
     this.radius = 10;
     this.color = "white";
     this.velocity = velocity;
+    //for keeping track of collision time
+    this.timeOfCollision = 0;
   }
   draw(game, ctx) {
     this.appearence(game, ctx);
+    addsImageToCanvas(
+      ctx,
+      "asteroid",
+      new Position(this.position.x - 20, this.position.y - 20)
+    );
   }
   appearence(game, ctx) {
     ctx.beginPath();
@@ -28,6 +36,7 @@ export class Enemy extends Entity {
     if (isCircleAndRectColliding(this, game.player1)) {
       this.resetPositionOfPlayer1(game);
     }
+
     if (isCircleAndRectColliding(this, game.player2)) {
       this.resetPositionOfPlayer2(game);
     }
@@ -41,10 +50,14 @@ export class Enemy extends Entity {
   }
 
   resetPositionOfPlayer1(game) {
-    game.player1.position = new Position(width / 2 - 50 * 2, height - 100);
+    game.player1.position = new Position(width / 2 - 50 * 2, height + 50);
   }
 
   resetPositionOfPlayer2(game) {
-    game.player2.position = new Position(width / 2 + 70, height - 100);
+    /*  if (game.player2.position.y !== height - 100) {
+      game.player2.position.y += game.player1.velocity.dy * game.deltaTime;
+    } */
+    //if the player instead should reset to starting position on collision with enemy, run line below
+    game.player2.position = new Position(width / 2 + 70, height + 50);
   }
 }

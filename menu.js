@@ -1,6 +1,6 @@
 import { Entity, Position } from "./entity.js";
 import { height, width } from "./game.js";
-import { addsRowsOfTextToCanvas, addsTextToCanvas } from "./utility.js";
+import { addsImageToCanvas, addsRowsOfTextToCanvas, addsTextToCanvas } from "./utility.js";
 
 export class Menu extends Entity {
   constructor(position) {
@@ -14,6 +14,9 @@ export class Menu extends Entity {
   draw(game, ctx) {
     this.appearance(ctx);
 
+    addsImageToCanvas(ctx, "starrySky", new Position(0, -900));
+    addsImageToCanvas(ctx, "introPlayer", new Position(width / 2 - 25, 120))
+    
     this.title(ctx);
 
     this.underTitle(ctx);
@@ -37,7 +40,7 @@ export class Menu extends Entity {
   title(ctx) {
     addsTextToCanvas(
       ctx,
-      "S P A C E 🚀 R A C E",
+      "S P A C E    R A C E",
       "60px",
       new Position(width / 2, height / 6)
     );
@@ -48,7 +51,7 @@ export class Menu extends Entity {
       ctx,
       "CONTROLS",
       "50px",
-      new Position(width / 2, height / 6 + 150)
+      new Position(width / 2, height * 0.37)
     );
   }
 
@@ -60,7 +63,7 @@ export class Menu extends Entity {
       "S: Move down",
       "Q: Shoot",
       "40px",
-      new Position(width / 2 / 4 + 50, height / 2)
+      new Position(width * 0.125, height / 2)
     );
   }
 
@@ -72,7 +75,7 @@ export class Menu extends Entity {
       "L: Move down",
       "P: Shoot",
       "40px",
-      new Position(width / 2 + width / 4 - 100, height / 2)
+      new Position(width * 0.625, height / 2)
     );
   }
 
@@ -81,7 +84,7 @@ export class Menu extends Entity {
       ctx,
       "Score 10 points to win!",
       "30px",
-      new Position(width / 2, height - 300)
+      new Position(width / 2, height * 0.75)
       )
   }
 

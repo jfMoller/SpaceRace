@@ -1,4 +1,4 @@
-import { width } from "./game.js";
+import { height, width } from "./game.js";
 
 export function generatesRandomNumberBetween(max, min) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -69,4 +69,9 @@ export function addsRowsOfTextToCanvas(
   ctx.fillText(textRow2, startPosition.x, startPosition.y);
   ctx.fillText(textRow3, startPosition.x, startPosition.y + 40);
   ctx.fillText(textRow4, startPosition.x, startPosition.y + 80);
+}
+
+export function addsImageToCanvas(ctx, id, position) {
+  let img = document.getElementById(id);
+  ctx.drawImage(img, position.x, position.y);
 }

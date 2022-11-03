@@ -1,6 +1,7 @@
 import { height, width } from "./game.js";
 import { Entity, Velocity, Position } from "./entity.js";
 import { Projectile } from "./projectile.js";
+import { addsImageToCanvas, addsTextToCanvas } from "./utility.js";
 
 class Keys {
   constructor() {
@@ -12,7 +13,7 @@ class Keys {
 export class Player extends Entity {
   constructor(position) {
     super(position);
-    this.color = "white";
+    this.color = "rgba(1, 1, 1, 0.0)";
     this.width = 50;
     this.height = 100;
     this.keys = new Keys();
@@ -21,14 +22,44 @@ export class Player extends Entity {
     //for keeping track of reload time
     this.timeOfShotFired = 0;
     this.shotReady = true;
+    //to make invisible if hit by enemy
+    this.hitByEnemy = false;
   }
 
   draw(game, ctx) {
     this.appearance(ctx);
 
-    this.scores(ctx);
+    this.scores(ctx, game);
 
     this.reloadStatus(ctx);
+
+    addsImageToCanvas(
+      ctx,
+      "player1",
+      new Position(game.player1.position.x - 4, game.player1.position.y)
+    );
+
+    if (game.player1.shotReady) {
+      addsImageToCanvas(
+        ctx,
+        "laserBall",
+        new Position(game.player1.position.x + 5, game.player1.position.y + 25)
+      );
+    }
+
+    addsImageToCanvas(
+      ctx,
+      "player1",
+      new Position(game.player2.position.x - 4, game.player2.position.y)
+    );
+
+    if (game.player2.shotReady) {
+      addsImageToCanvas(
+        ctx,
+        "laserBall2",
+        new Position(game.player2.position.x + 5, game.player2.position.y + 25)
+      );
+    }
   }
   appearance(ctx) {
     ctx.beginPath();
@@ -37,11 +68,14 @@ export class Player extends Entity {
     ctx.fill();
   }
 
-  scores(ctx) {
-    ctx.font = "90px serif";
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+  scores(ctx, game) {
+    addsTextToCanvas(
+      ctx,
+      this.score,
+      "90px",
+      this.position.x - this.width,
+      height * 0.9
+    );
 
     if (this.position.x < width / 2) {
       ctx.fillText(this.score, this.position.x - this.width, height * 0.9);
@@ -51,7 +85,7 @@ export class Player extends Entity {
   }
 
   reloadStatus(ctx) {
-    ctx.font = "40px serif";
+    /* ctx.font = "40px serif";
     ctx.fillStyle = "yellow";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -63,7 +97,7 @@ export class Player extends Entity {
         this.position.x + this.width * 2,
         height * 0.83
       );
-    }
+    } */
   }
 
   tick(game) {
@@ -77,7 +111,7 @@ export class Player extends Entity {
   }
 
   movesUp(game) {
-    if (this.keys.up && this.position.y > 0) {
+    if (this.keys.up && this.position.y > -50) {
       this.position.y -= this.velocity.dy * game.deltaTime;
     }
   }
@@ -89,12 +123,12 @@ export class Player extends Entity {
   }
 
   scoresAndResetsPosition(game) {
-    if (game.player1.position.y <= 0) {
+    if (game.player1.position.y <= -50) {
       this.score++;
-      this.position = new Position(width / 2 - 50 * 2, height - 100);
+      this.position = new Position(width / 2 - 50 * 2, height + 50);
     } else if (game.player2.position.y <= 0) {
       this.score++;
-      this.position = new Position(width / 2 + 70, height - 100);
+      this.position = new Position(width / 2 + 70, height + 50);
     }
   }
 
@@ -131,7 +165,8 @@ export class Player extends Entity {
       new Projectile(
         new Position(
           this.position.x + this.width + 8,
-          this.position.y + this.height / 2),
+          this.position.y + this.height / 2
+        ),
         new Velocity(600, 0)
       )
     );
