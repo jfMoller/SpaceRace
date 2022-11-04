@@ -40,7 +40,8 @@ export class Enemy extends Entity {
       this.isDeleted(game);
     }
 
-    if (isCircleAndRectColliding(this, game.player1) &&
+    if (
+      isCircleAndRectColliding(this, game.player1) &&
       game.player1.isHit === false
     ) {
       this.hitsPlayer1AndStartsTimer(game);
