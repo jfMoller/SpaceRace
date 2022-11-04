@@ -1,7 +1,7 @@
 import { Position, Velocity } from "./entity.js";
 import { Player } from "./player.js";
 import { Wall } from "./wall.js";
-import { Enemy } from "./enemy1.js";
+import { Enemy } from "./enemy.js";
 import { generatesRandomNumberBetween } from "./utility.js";
 
 export const canvas = document.getElementById("canvas");
