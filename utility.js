@@ -1,4 +1,4 @@
-import { height, width } from "./game.js";
+import { width } from "./game.js";
 
 export function generatesRandomNumberBetween(max, min) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -35,7 +35,9 @@ export function isOutsideCanvas(circle) {
   //right side
   else if (circle.position.x > width + circle.radius) {
     return true;
-  } else {
+  } 
+  
+  else {
     return false;
   }
 }

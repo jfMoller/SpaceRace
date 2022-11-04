@@ -19,53 +19,70 @@ export class Player extends Entity {
     this.keys = new Keys();
     this.velocity = new Velocity(700, 700);
     this.score = 0;
+
     //for keeping track of reload time
     this.timeOfShotFired = 0;
     this.shotReady = true;
-    //to make invisible if hit by enemy
-    this.hitByEnemy = false;
+
+    //to make player invisible if hit by enemies
+    this.isBeingReset = false;
+
+    //to record which player was hit
+    this.isHit = false;
   }
 
   draw(game, ctx) {
-    this.appearance(ctx);
+    this.hitBox(ctx);
+
+    this.appearanceAndReloadStatus(ctx, game);
 
     this.scores(ctx, game);
-
-    this.reloadStatus(ctx);
-
-    addsImageToCanvas(
-      ctx,
-      "player1",
-      new Position(game.player1.position.x - 4, game.player1.position.y)
-    );
-
-    if (game.player1.shotReady) {
-      addsImageToCanvas(
-        ctx,
-        "laserBall",
-        new Position(game.player1.position.x + 5, game.player1.position.y + 25)
-      );
-    }
-
-    addsImageToCanvas(
-      ctx,
-      "player1",
-      new Position(game.player2.position.x - 4, game.player2.position.y)
-    );
-
-    if (game.player2.shotReady) {
-      addsImageToCanvas(
-        ctx,
-        "laserBall2",
-        new Position(game.player2.position.x + 5, game.player2.position.y + 25)
-      );
-    }
   }
-  appearance(ctx) {
+
+  hitBox(ctx) {
     ctx.beginPath();
     ctx.rect(this.position.x, this.position.y, this.width, this.height);
     ctx.fillStyle = this.color;
     ctx.fill();
+  }
+
+  appearanceAndReloadStatus(ctx, game) {
+    if (game.player1.isBeingReset !== true) {
+      addsImageToCanvas(
+        ctx,
+        "player",
+        new Position(game.player1.position.x - 4, game.player1.position.y)
+      );
+
+      if (game.player1.shotReady) {
+        addsImageToCanvas(
+          ctx,
+          "blueProjectile",
+          new Position(
+            game.player1.position.x + 5,
+            game.player1.position.y + 25
+          )
+        );
+      }
+    }
+    if (game.player2.isBeingReset !== true) {
+      addsImageToCanvas(
+        ctx,
+        "player",
+        new Position(game.player2.position.x - 4, game.player2.position.y)
+      );
+
+      if (game.player2.shotReady) {
+        addsImageToCanvas(
+          ctx,
+          "redProjectile",
+          new Position(
+            game.player2.position.x + 5,
+            game.player2.position.y + 25
+          )
+        );
+      }
+    }
   }
 
   scores(ctx, game) {
@@ -76,7 +93,8 @@ export class Player extends Entity {
       this.position.x - this.width,
       height * 0.9
     );
-
+/* score of player 1 appears on the left side of screen,
+ whereas score of player 2 appears on the right side */
     if (this.position.x < width / 2) {
       ctx.fillText(this.score, this.position.x - this.width, height * 0.9);
     } else {
@@ -84,24 +102,8 @@ export class Player extends Entity {
     }
   }
 
-  reloadStatus(ctx) {
-    /* ctx.font = "40px serif";
-    ctx.fillStyle = "yellow";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    if (this.position.x < width / 2) {
-      ctx.fillText(this.shotReady, this.position.x - this.width, height * 0.83);
-    } else {
-      ctx.fillText(
-        this.shotReady,
-        this.position.x + this.width * 2,
-        height * 0.83
-      );
-    } */
-  }
-
   tick(game) {
-    this.movesUp(game);
+    this.movesUpUnlessPositionIsBeingReset(game);
 
     this.movesDown(game);
 
@@ -110,9 +112,13 @@ export class Player extends Entity {
     this.shootsAndReloads(game);
   }
 
-  movesUp(game) {
+  movesUpUnlessPositionIsBeingReset(game) {
     if (this.keys.up && this.position.y > -50) {
-      this.position.y -= this.velocity.dy * game.deltaTime;
+       this.position.y -= this.velocity.dy * game.deltaTime;
+
+       if (this.isBeingReset) { 
+        this.position.y += this.velocity.dy * game.deltaTime;
+      }
     }
   }
 
@@ -125,10 +131,11 @@ export class Player extends Entity {
   scoresAndResetsPosition(game) {
     if (game.player1.position.y <= -50) {
       this.score++;
-      this.position = new Position(width / 2 - 50 * 2, height + 50);
-    } else if (game.player2.position.y <= 0) {
+      this.position = new Position(width / 2 - 50 * 2, height + 25);
+    } 
+    else if (game.player2.position.y <= 0) {
       this.score++;
-      this.position = new Position(width / 2 + 70, height + 50);
+      this.position = new Position(width / 2 + 70, height + 25);
     }
   }
 
@@ -137,6 +144,7 @@ export class Player extends Entity {
     if (this.keys.shoot && this.shotReady === false) {
       this.keys.shoot = false;
     }
+
     //if player shoots, and shot is ready
     if (this.keys.shoot && this.shotReady) {
       //creates a time value of WHEN the player shoots
@@ -152,14 +160,15 @@ export class Player extends Entity {
       //when the projectile has been shot, the shot is not ready anymore
       this.shotReady = false;
     }
+
     /*  in words: if the (total amount of time that HAS elapsed in the game 
           - the time that HAD elapsed in the game when the player shot) is more than 3 seconds,
           THEN the shot will be ready again. */
-
     if (game.tickTime - this.timeOfShotFired >= 3) {
       this.shotReady = true;
     }
   }
+
   projectileTravelsRight(game) {
     game.entities.push(
       new Projectile(
@@ -171,6 +180,7 @@ export class Player extends Entity {
       )
     );
   }
+
   projectileTravelsLeft(game) {
     game.entities.push(
       new Projectile(

@@ -24,16 +24,16 @@ export class Game {
 
     //ENEMY SETTINGS
     this.enemiesOn = true;
-    this.enemiesSpawnRate = 500; //ms
+    this.enemiesSpawnRate = 200; //ms
 
-    //TIME MEASUREMENT (used to equalize game experience for users with different FPS)
+    //TIME MEASUREMENTS (used to equalize game experience for users with different FPS)
     this.deltaTime = 0;
     this.tickTime = 0;
 
     //for handling index values when splicing in tick method of different classes
     this.index = 0;
 
-    //FOR HANDLING MENU AND PREVENTING GAME EVENTS IN MENU
+    //for handling menu and preventing game events in menu
     this.running = false;
   }
 
@@ -50,19 +50,19 @@ export class Game {
     let randomDirection = generatesRandomNumberBetween(1, 0);
 
     if (randomDirection === 0) {
-      // from the left side
+      // spawned from the left side
       this.entities.push(
         new Enemy(
           new Position(0, Math.random() * height - 200),
-          new Velocity(100, 0)
+          new Velocity(400, 0)
         )
       );
     } else if (randomDirection === 1) {
-      // from the right side
+      // spawned from the right side
       this.entities.push(
         new Enemy(
           new Position(width, Math.random() * height - 200),
-          new Velocity(-100, 0)
+          new Velocity(-400, 0)
         )
       );
     }

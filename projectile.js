@@ -11,23 +11,23 @@ export class Projectile extends Entity {
     this.velocity = velocity;
   }
   draw(game, ctx) {
-    this.appearance(ctx);
-  
-  if (this.velocity.dx === 600 ) {
-  addsImageToCanvas(ctx, "laserBall", new Position(this.position.x - 20, this.position.y - 20));
-
-}
-else if (this.velocity.dx === - 600) {
-  addsImageToCanvas(ctx, "laserBall2", new Position(this.position.x - 20, this.position.y - 20));
-}
- 
+    this.hitBox(ctx);
+    this.appearance(ctx)
   }
 
-  appearance(ctx) {
+  hitBox(ctx) {
     ctx.beginPath();
     ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
     ctx.fillStyle = this.color;
     ctx.fill();
+  }
+  appearance(ctx) {
+    if (this.velocity.dx === Math.abs(this.velocity.dx) ) {
+      addsImageToCanvas(ctx, "blueProjectile", new Position(this.position.x - 20, this.position.y - 20));
+    }
+    else {
+      addsImageToCanvas(ctx, "redProjectile", new Position(this.position.x - 20, this.position.y - 20));
+    }
   }
 
   tick(game) {
@@ -60,10 +60,12 @@ else if (this.velocity.dx === - 600) {
   }
 
   resetPositionOfPlayer1(game) {
-    game.player1.position = new Position(width / 2 - 50 * 2, height + 50);
+    game.player1.keys.up = false;
+    game.player1.position = new Position(width / 2 - 50 * 2, height - 100);
   }
 
   resetPositionOfPlayer2(game) {
-    game.player2.position = new Position(width / 2 + 70, height + 50);
+    game.player2.keys.up = false;
+    game.player2.position = new Position(width / 2 + 70, height - 100);
   }
 }

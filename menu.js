@@ -14,9 +14,6 @@ export class Menu extends Entity {
   draw(game, ctx) {
     this.appearance(ctx);
 
-    addsImageToCanvas(ctx, "starrySky", new Position(0, -900));
-    addsImageToCanvas(ctx, "introPlayer", new Position(width / 2 - 25, 120))
-    
     this.title(ctx);
 
     this.underTitle(ctx);
@@ -35,6 +32,8 @@ export class Menu extends Entity {
     ctx.rect(this.position.x, this.position.y, this.width, this.height);
     ctx.fillStyle = this.color;
     ctx.fill();
+    addsImageToCanvas(ctx, "menuBackground", new Position(0, -150));
+    addsImageToCanvas(ctx, "playerLogo", new Position(width / 2 - 25, 120))
   }
 
   title(ctx) {
@@ -87,7 +86,6 @@ export class Menu extends Entity {
       new Position(width / 2, height * 0.75)
       )
   }
-
 
   promptKey(ctx) {
     addsTextToCanvas(

@@ -11,17 +11,23 @@ export class Wall extends Entity {
   }
 
   draw(game, ctx) {
-    addsImageToCanvas(ctx, "background", new Position(0, 0));
+    this.centersGameBackground(ctx);
     this.appearance(ctx);
-    addsImageToCanvas(ctx, "tower", new Position(this.position.x -10, this.position.y - 13));
 
   }
+  centersGameBackground(ctx) {
+    addsImageToCanvas(ctx, "gameBackground", new Position(0, 0));
+  }
+
   appearance(ctx) {
     ctx.beginPath();
     ctx.rect(this.position.x, this.position.y, this.width, this.height);
     ctx.fillStyle = this.color;
     ctx.fill();
+    addsImageToCanvas(ctx, "tower", new Position(this.position.x -10, this.position.y - 13));
   }
 
   tick() {}
 }
+
+
