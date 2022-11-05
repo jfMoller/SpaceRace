@@ -38,12 +38,12 @@ export class Projectile extends Entity {
 
     if (isCircleAndRectColliding(this, game.player1)) {
       this.isDeleted(game);
-      this.resetPositionOfPlayer1(game);
+      this.resetsPositionOfPlayer1AndPlayer2Scores(game);
     }
 
     if (isCircleAndRectColliding(this, game.player2)) {
       this.isDeleted(game);
-      this.resetPositionOfPlayer2(game);
+      this.resetsPositionOfPlayer2AndPlayer1Scores(game);
     }
 
     if (isCircleAndRectColliding(this, game.wall)) {
@@ -59,12 +59,14 @@ export class Projectile extends Entity {
     game.entities.splice(game.index--, 1);
   }
 
-  resetPositionOfPlayer1(game) {
+  resetsPositionOfPlayer1AndPlayer2Scores(game) {
+    game.player2.score++;
     game.player1.keys.up = false;
     game.player1.position = new Position(width / 2 - 50 * 2, height - 100);
   }
 
-  resetPositionOfPlayer2(game) {
+  resetsPositionOfPlayer2AndPlayer1Scores(game) {
+    game.player1.score++;
     game.player2.keys.up = false;
     game.player2.position = new Position(width / 2 + 70, height - 100);
   }

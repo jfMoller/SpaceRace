@@ -1,4 +1,4 @@
-import { height, width } from "./game.js";
+import { game, height, width } from "./game.js";
 import { Entity, Velocity, Position } from "./entity.js";
 import { Projectile } from "./projectile.js";
 import { addsImageToCanvas, addsTextToCanvas } from "./utility.js";
@@ -93,7 +93,7 @@ export class Player extends Entity {
       this.position.x - this.width,
       height * 0.9
     );
-/* score of player 1 appears on the left side of screen,
+    /* score of player 1 appears on the left side of screen,
  whereas score of player 2 appears on the right side */
     if (this.position.x < width / 2) {
       ctx.fillText(this.score, this.position.x - this.width, height * 0.9);
@@ -110,13 +110,15 @@ export class Player extends Entity {
     this.scoresAndResetsPosition(game);
 
     this.shootsAndReloads(game);
+
+    this.wins(game);
   }
 
   movesUpUnlessPositionIsBeingReset(game) {
     if (this.keys.up && this.position.y > -50) {
-       this.position.y -= this.velocity.dy * game.deltaTime;
+      this.position.y -= this.velocity.dy * game.deltaTime;
 
-       if (this.isBeingReset) { 
+      if (this.isBeingReset) {
         this.position.y += this.velocity.dy * game.deltaTime;
       }
     }
@@ -132,8 +134,7 @@ export class Player extends Entity {
     if (game.player1.position.y <= -50) {
       this.score++;
       this.position = new Position(width / 2 - 50 * 2, height + 25);
-    } 
-    else if (game.player2.position.y <= 0) {
+    } else if (game.player2.position.y <= 0) {
       this.score++;
       this.position = new Position(width / 2 + 70, height + 25);
     }
@@ -188,5 +189,17 @@ export class Player extends Entity {
         new Velocity(-600, 0)
       )
     );
+  }
+  wins() {
+    if (game.running && this.score >= 1) {
+      if (this.score === game.player1.score) {
+        alert("Player 1 has won!");
+      } else {
+        alert("Player 2 has won!");
+      }
+      game.running = false;
+      location.reload();
+      return;
+    }
   }
 }

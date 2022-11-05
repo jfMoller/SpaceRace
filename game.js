@@ -21,6 +21,7 @@ export class Game {
     this.wall = this.entities[0];
     this.player1 = this.entities[1];
     this.player2 = this.entities[2];
+    this.enemies;
 
     //ENEMY SETTINGS
     this.enemiesOn = true;
@@ -88,22 +89,12 @@ function tick() {
     let entity = game.entities[game.index];
     entity.draw(game, ctx);
     entity.tick(game);
-  }
 
-  //when game over
-  if (game.running && game.player1.score >= 10) {
-    alert("Player 1 has won!");
-    game.running = false;
-    location.reload();
-    return;
+    if (entity instanceof Enemy) {
+    game.enemies = entity;
+    }
   }
-
-  if (game.running && game.player2.score >= 10) {
-    alert("Player 2 has won!");
-    game.running = false; //
-    location.reload();
-    return;
-  }
+  
   requestAnimationFrame(tick);
 }
 
