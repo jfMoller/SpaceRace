@@ -1,7 +1,11 @@
 import { game, height, width } from "./game.js";
 import { Entity, Velocity, Position } from "./entity.js";
 import { Projectile } from "./projectile.js";
-import { addsImageToCanvas, addsTextToCanvas } from "./utility.js";
+import {
+  addsImageToCanvas,
+  addsTextToCanvas,
+  isCircleAndRectColliding,
+} from "./utility.js";
 
 class Keys {
   constructor() {
@@ -29,6 +33,7 @@ export class Player extends Entity {
 
     //to record which player was hit
     this.isHit = false;
+    this.timeOfCollision = null;
   }
 
   draw(game, ctx) {
@@ -111,7 +116,24 @@ export class Player extends Entity {
 
     this.shootsAndReloads(game);
 
-    this.wins(game);
+    if (
+      !this.isHit &&
+      game.enemy !== null &&
+      isCircleAndRectColliding(game.enemy, this)
+    ) {
+      this.startsTimer(game);
+      this.isInvisibleAndUnableToScore(game);
+    }
+
+    if (
+      this.timerIsRunning(game) &&
+      this.timerHasRunForTheseManySeconds(game) >= 3
+    ) {
+      this.positionIsReset(game);
+      this.isVisibleAndAbleToScore(game);
+    }
+
+    this.winsWhenReachingThisScore(game);
   }
 
   movesUpUnlessPositionIsBeingReset(game) {
@@ -190,8 +212,44 @@ export class Player extends Entity {
       )
     );
   }
-  wins() {
-    if (game.running && this.score >= 1) {
+
+  startsTimer(game) {
+    this.isHit = true;
+    this.timeOfCollision = game.tickTime;
+  }
+
+  isInvisibleAndUnableToScore(game) {
+    this.isBeingReset = true; //boolean logic handled in player.js draw method
+    this.keys.up = false;
+  }
+
+  timerIsRunning(game) {
+    if (this.isHit && this.timeOfCollision !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  timerHasRunForTheseManySeconds(game) {
+    return game.tickTime - this.timeOfCollision;
+  }
+
+  positionIsReset(game) {
+    this.timeOfCollision = null;
+    this.keys.up = false;
+    if (this.position.x < width / 2) {
+      this.position = new Position(width / 2 - 50 * 2, height - 100);
+    } else {
+      this.position = new Position(width / 2 + 70, height - 100);
+    }
+  }
+  isVisibleAndAbleToScore(game) {
+    this.isBeingReset = false;
+    this.isHit = false;
+  }
+
+  winsWhenReachingThisScore() {
+    if (game.running && this.score >= 10) {
       if (this.score === game.player1.score) {
         alert("Player 1 has won!");
       } else {

@@ -2,7 +2,10 @@ import { Position, Velocity } from "./entity.js";
 import { Player } from "./player.js";
 import { Wall } from "./wall.js";
 import { Enemy } from "./enemy.js";
-import { generatesRandomNumberBetween } from "./utility.js";
+import {
+  generatesRandomNumberBetween,
+  isCircleAndRectColliding,
+} from "./utility.js";
 
 export const canvas = document.getElementById("canvas");
 export const ctx = canvas.getContext("2d");
@@ -21,7 +24,7 @@ export class Game {
     this.wall = this.entities[0];
     this.player1 = this.entities[1];
     this.player2 = this.entities[2];
-    this.enemies;
+    this.enemy;
 
     //ENEMY SETTINGS
     this.enemiesOn = true;
@@ -71,6 +74,7 @@ export class Game {
 }
 
 export const game = new Game(canvas, ctx);
+game.enemy = null;
 
 let lastTick = Date.now();
 
@@ -90,12 +94,20 @@ function tick() {
     entity.draw(game, ctx);
     entity.tick(game);
 
-    if (entity instanceof Enemy) {
-    game.enemies = entity;
+    //prototype for identifying speciffic enemy who is colliding with player
+    if (
+      (entity instanceof Enemy &&
+        isCircleAndRectColliding(entity, game.player1)) ||
+      (entity instanceof Enemy &&
+        isCircleAndRectColliding(entity, game.player2))
+    ) {
+      game.enemy = entity;
     }
+
   }
-  
+
   requestAnimationFrame(tick);
+  
 }
 
 tick();

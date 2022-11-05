@@ -5,6 +5,7 @@ export function generatesRandomNumberBetween(max, min) {
 }
 
 export function isCircleAndRectColliding(circle, rect) {
+  
   var distX = Math.abs(circle.position.x - rect.position.x - rect.width / 2);
   var distY = Math.abs(circle.position.y - rect.position.y - rect.height / 2);
 
