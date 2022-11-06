@@ -40,6 +40,10 @@ export class Enemy extends Entity {
     if (isOutsideCanvas(this)) {
       this.isDeleted(game);
     }
+
+    if (this.isCollidingWithPlayer(game)) {
+      game.enemy = this;
+    }
   }
   moves(game) {
     this.position.x += this.velocity.dx * game.deltaTime;
@@ -48,5 +52,15 @@ export class Enemy extends Entity {
 
   isDeleted(game) {
     game.entities.splice(game.index--, 1);
+  }
+  isCollidingWithPlayer(game) {
+    if (
+      (this !== null && isCircleAndRectColliding(this, game.player1)) ||
+      isCircleAndRectColliding(this, game.player2)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

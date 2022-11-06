@@ -24,7 +24,7 @@ export class Game {
     this.wall = this.entities[0];
     this.player1 = this.entities[1];
     this.player2 = this.entities[2];
-    this.enemy;
+    this.enemy = null; //identification handled in enemy.js after game starts
 
     //ENEMY SETTINGS
     this.enemiesOn = true;
@@ -74,7 +74,6 @@ export class Game {
 }
 
 export const game = new Game(canvas, ctx);
-game.enemy = null;
 
 let lastTick = Date.now();
 
@@ -93,21 +92,8 @@ function tick() {
     let entity = game.entities[game.index];
     entity.draw(game, ctx);
     entity.tick(game);
-
-    //prototype for identifying speciffic enemy who is colliding with player
-    if (
-      (entity instanceof Enemy &&
-        isCircleAndRectColliding(entity, game.player1)) ||
-      (entity instanceof Enemy &&
-        isCircleAndRectColliding(entity, game.player2))
-    ) {
-      game.enemy = entity;
-    }
-
   }
-
   requestAnimationFrame(tick);
-  
 }
 
 tick();

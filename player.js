@@ -108,13 +108,16 @@ export class Player extends Entity {
   }
 
   tick(game) {
-    this.movesUpUnlessPositionIsBeingReset(game);
 
+    if (!this.isBeingReset) {
+    this.movesUp(game)
+  
     this.movesDown(game);
 
     this.scoresAndResetsPosition(game);
-
+    
     this.shootsAndReloads(game);
+  }
 
     if (
       !this.isHit &&
@@ -122,7 +125,7 @@ export class Player extends Entity {
       isCircleAndRectColliding(game.enemy, this)
     ) {
       this.startsTimer(game);
-      this.isInvisibleAndUnableToScore(game);
+      this.isInvisibleAndUnresponsive(game);
     }
 
     if (
@@ -130,19 +133,15 @@ export class Player extends Entity {
       this.timerHasRunForTheseManySeconds(game) >= 3
     ) {
       this.positionIsReset(game);
-      this.isVisibleAndAbleToScore(game);
+      this.isVisibleAndResponsive(game);
     }
 
     this.winsWhenReachingThisScore(game);
   }
 
-  movesUpUnlessPositionIsBeingReset(game) {
+  movesUp(game) {
     if (this.keys.up && this.position.y > -50) {
       this.position.y -= this.velocity.dy * game.deltaTime;
-
-      if (this.isBeingReset) {
-        this.position.y += this.velocity.dy * game.deltaTime;
-      }
     }
   }
 
@@ -218,7 +217,7 @@ export class Player extends Entity {
     this.timeOfCollision = game.tickTime;
   }
 
-  isInvisibleAndUnableToScore(game) {
+  isInvisibleAndUnresponsive(game) {
     this.isBeingReset = true; //boolean logic handled in player.js draw method
     this.keys.up = false;
   }
@@ -243,7 +242,7 @@ export class Player extends Entity {
       this.position = new Position(width / 2 + 70, height - 100);
     }
   }
-  isVisibleAndAbleToScore(game) {
+  isVisibleAndResponsive(game) {
     this.isBeingReset = false;
     this.isHit = false;
   }
