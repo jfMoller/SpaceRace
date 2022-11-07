@@ -2,10 +2,7 @@ import { Position, Velocity } from "./entity.js";
 import { Player } from "./player.js";
 import { Wall } from "./wall.js";
 import { Enemy } from "./enemy.js";
-import {
-  generatesRandomNumberBetween,
-  isCircleAndRectColliding,
-} from "./utility.js";
+import { generatesRandomNumberBetween } from "./utility.js";
 
 export const canvas = document.getElementById("canvas");
 export const ctx = canvas.getContext("2d");
@@ -24,7 +21,7 @@ export class Game {
     this.wall = this.entities[0];
     this.player1 = this.entities[1];
     this.player2 = this.entities[2];
-    this.enemy = null; //identification handled in enemy.js after game starts
+    this.enemy = null; //used for enemies/collision, declaration handled in enemy.js
 
     //ENEMY SETTINGS
     this.enemiesOn = true;

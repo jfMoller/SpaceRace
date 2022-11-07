@@ -1,6 +1,10 @@
 import { Entity, Position } from "./entity.js";
 import { height, width } from "./game.js";
-import { addsImageToCanvas, addsRowsOfTextToCanvas, addsTextToCanvas } from "./utility.js";
+import {
+  addsImageToCanvas,
+  addsRowsOfTextToCanvas,
+  addsTextToCanvas,
+} from "./utility.js";
 
 export class Menu extends Entity {
   constructor(position) {
@@ -21,8 +25,12 @@ export class Menu extends Entity {
     this.player1Intruction(ctx);
 
     this.player2Intruction(ctx);
-    
-    this.gameInstructions(ctx);
+
+    this.gameInstructions1(ctx);
+
+    this.gameInstructions2(ctx);
+
+    this.promptAction(ctx);
 
     this.promptKey(ctx);
   }
@@ -33,7 +41,7 @@ export class Menu extends Entity {
     ctx.fillStyle = this.color;
     ctx.fill();
     addsImageToCanvas(ctx, "menuBackground", new Position(0, -150));
-    addsImageToCanvas(ctx, "playerLogo", new Position(width / 2 - 25, 120))
+    addsImageToCanvas(ctx, "playerLogo", new Position(width / 2 - 25, 120));
   }
 
   title(ctx) {
@@ -78,13 +86,31 @@ export class Menu extends Entity {
     );
   }
 
-  gameInstructions(ctx){
+  gameInstructions1(ctx) {
+    addsTextToCanvas(
+      ctx,
+      "Score points by racing to the top,",
+      "20px",
+      new Position(width / 2, height * 0.67)
+    );
+  }
+
+  gameInstructions2(ctx) {
+    addsTextToCanvas(
+      ctx,
+      "and/or shooting down the other player",
+      "20px",
+      new Position(width / 2, height * 0.7)
+    );
+  }
+
+  promptAction(ctx) {
     addsTextToCanvas(
       ctx,
       "Score 10 points to win!",
       "30px",
-      new Position(width / 2, height * 0.75)
-      )
+      new Position(width / 2, height * 0.8)
+    );
   }
 
   promptKey(ctx) {
@@ -92,7 +118,7 @@ export class Menu extends Entity {
       ctx,
       "Press ENTER to Start Game",
       "50px",
-      new Position(width / 2, height - 100)
+      new Position(width / 2, height * 0.9)
     );
   }
 

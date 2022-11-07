@@ -108,22 +108,17 @@ export class Player extends Entity {
   }
 
   tick(game) {
-
     if (!this.isBeingReset) {
-    this.movesUp(game)
-  
-    this.movesDown(game);
+      this.movesUp(game);
 
-    this.scoresAndResetsPosition(game);
-    
-    this.shootsAndReloads(game);
-  }
+      this.movesDown(game);
 
-    if (
-      !this.isHit &&
-      game.enemy !== null &&
-      isCircleAndRectColliding(game.enemy, this)
-    ) {
+      this.scoresAndResetsPosition(game);
+
+      this.shootsAndReloads(game);
+    }
+
+    if (this.collidesWithAnEnemy(game)) {
       this.startsTimer(game);
       this.isInvisibleAndUnresponsive(game);
     }
@@ -188,6 +183,18 @@ export class Player extends Entity {
           THEN the shot will be ready again. */
     if (game.tickTime - this.timeOfShotFired >= 3) {
       this.shotReady = true;
+    }
+  }
+
+  collidesWithAnEnemy(game) {
+    if (
+      !this.isHit &&
+      game.enemy !== null &&
+      isCircleAndRectColliding(game.enemy, this)
+    ) {
+      return true;
+    } else {
+      return false;
     }
   }
 
