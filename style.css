@@ -1,5 +1,9 @@
+html {
+  scale: 0.7;
+}
+
 body {
-  zoom: 65%;
+  max-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
