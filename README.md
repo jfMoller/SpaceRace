@@ -1,1 +1,2 @@
-# Graded assignment, building a variation of the retro "space race"; practicing OOP (focusing on inheritance & polymorphism)
+## About this project:
+A variation of the retro game space race, build as part of my education as a fullstack developer student.
